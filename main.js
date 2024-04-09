@@ -1,5 +1,7 @@
 const resultInput = document.getElementById('result');
+const inputInfoContainer = document.getElementById('input-info');
 const processDisplay = document.getElementById('process');
+const erasedDisplay = document.getElementById('erased');
 const shiftButton = document.getElementById('shift');
 
 const validOperators = ['+', '-', '*', '/', '%', '**'];
@@ -10,7 +12,7 @@ let currentOperator = '+';
 let digitNumber = 1;
 
 let history = [];
-let isRightAfterInput = false;
+let erasedHistory = null;
 let isShift = false;
 
 let isCalculated = false;
@@ -45,6 +47,22 @@ const setProcessDisplay = (value, operator = currentOperator) => {
     if (validOperators.includes(operator)) {
         const process = `${operator}${value}`;
         processDisplay.textContent = process;
+    }
+}
+
+const setErasedDisplay = (value, operator) => {
+    if (value !== '' && validOperators.includes(operator)) {
+        const process = `${operator}${value}`;
+        erasedDisplay.textContent = `(erased: ${process})`;
+    } else {
+        erasedDisplay.textContent = '';
+    }
+}
+
+const setErasedDisplayByHistory = (targetHistory) => {
+    if (targetHistory) {
+        const { processValue, operator, result } = targetHistory;
+        setErasedDisplay(processValue, operator);
     }
 }
 
@@ -83,16 +101,16 @@ const clearValues = () => {
     currentResult = null;
     currentInput = '';
     history = [];
-    isRightAfterInput = false;
+    erasedHistory = null;
     processDisplay.textContent = '#';
     resultInput.value = 0;
 }
 
 // 数値の入力を処理する関数
 const handleInputValue = (value) => {
-    toggleCalculatedClass(processDisplay, false);
+    toggleCalculatedClass(inputInfoContainer, false);
+    setErasedDisplay('', null);
     addDigitToInput(value);
-    isRightAfterInput = true;
 }
 
 // 現在の入力に数字を追加する関数
@@ -146,19 +164,32 @@ const calculation = (value) => {
             break;
     }
     
-    toggleCalculatedClass(processDisplay, true);
+    toggleCalculatedClass(inputInfoContainer, true);
     setCurrentResult(currentValue);
     updateValues(currentValue, num);
 }
 
 // 直前の操作を取り消す関数
 const undoLastAction = () => {
-    if (isRightAfterInput) {
-        history.pop();
-        isRightAfterInput = false;
+    if (currentInput !== '') {
+        setErasedDisplay(currentInput, currentOperator);
+        setCurrentInput('');
+
+        if (history.length > 0) {
+            const { processValue, operator, result } = history[history.length - 1];
+            setProcessDisplay(processValue, operator);
+        } else {
+            clearValues();
+        }
+
+        return;
     }
+
+    erasedHistory = history.pop();
+    setErasedDisplayByHistory(erasedHistory);
     
-    const previousHistory = history.pop();
+    const previousHistory = history[history.length - 1];
+    erasedHistory = previousHistory;
     
     if (previousHistory) {
         const { processValue, operator, result } = previousHistory;
@@ -175,7 +206,6 @@ const changeResult = (newResult) => {
     setCurrentResult(newResult);
     const operator = difference < 0 ? '-' : '+';
     updateValues(newResult, Math.abs(difference), operator);
-    isRightAfterInput = true;
 }
 
 // 初期化関数
