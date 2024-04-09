@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Calculator</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator-option">
+            <label for="digit" class="label">桁数</label>
+            <input id="digit" type="number" value="1" onchange="setDigitNumberFromUI(value)" class="input">
+        </div>
+        <div class="calculator-option">
+            <label for="operator" class="label">演算子</label>
+            <select name="operator" id="operator" onchange="setOperatorFromUI(value)" class="select">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+                <option value="%">%</option>
+                <option value="**">**</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="keypad">
+        <div class="keypad-row">
+            <div onclick="inputValue(7); clicked(this)" class="keypad-item">7</div>
+            <div onclick="inputValue(8); clicked(this)" class="keypad-item">8</div>
+            <div onclick="inputValue(9); clicked(this)" class="keypad-item">9</div>
+        </div>
+        <div class="keypad-row">
+            <div onclick="inputValue(4); clicked(this)" class="keypad-item">4</div>
+            <div onclick="inputValue(5); clicked(this)" class="keypad-item">5</div>
+            <div onclick="inputValue(6); clicked(this)" class="keypad-item">6</div>
+        </div>
+        <div class="keypad-row">
+            <div onclick="inputValue(1); clicked(this)" class="keypad-item">1</div>
+            <div onclick="inputValue(2); clicked(this)" class="keypad-item">2</div>
+            <div onclick="inputValue(3); clicked(this)" class="keypad-item">3</div>
+        </div>
+        <div class="keypad-row">
+            <div onclick="inputValue(0); clicked(this)" class="keypad-item">0</div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <div onclick="clearValuesFromUI(); clicked(this)" class="control-button">C</div>
+        <div id="shift" onclick="toggleShiftFormUI()" class="shift-button">Shift</div>
+        <div onclick="undoLastActionFromUI(); clicked(this)" class="control-button">←</div>
+    </div>
+
+    <div class="output">
+        <div id="process" class="process">#</div>
+        <input id="result" type="number" value="0" onchange="changeResultFromUI(value)" class="result-input">
+    </div>
+
+    <script src="./main.js"></script>
+</body>
+</html>
