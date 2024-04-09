@@ -13,6 +13,8 @@ let history = [];
 let isRightAfterInput = false;
 let isShift = false;
 
+let isCalculated = false;
+
 // 現在の計算結果を設定する関数
 const setCurrentResult = (newResult) => {
     const numResult = Number(newResult);
@@ -88,6 +90,7 @@ const clearValues = () => {
 
 // 数値の入力を処理する関数
 const handleInputValue = (value) => {
+    toggleCalculatedClass(processDisplay, false);
     addDigitToInput(value);
     isRightAfterInput = true;
 }
@@ -143,13 +146,13 @@ const calculation = (value) => {
             break;
     }
     
+    toggleCalculatedClass(processDisplay, true);
     setCurrentResult(currentValue);
     updateValues(currentValue, num);
 }
 
 // 直前の操作を取り消す関数
 const undoLastAction = () => {
-    console.log(history);
     if (isRightAfterInput) {
         history.pop();
         isRightAfterInput = false;
@@ -232,4 +235,19 @@ const clicked = (element) => {
     setTimeout(() => {
         element.classList.remove('on-click');
     }, 125);
+}
+
+// 計算済み状態を切り替える関数
+const toggleCalculatedClass = (element, isCalculated) => {
+    if (isCalculated) {
+        element.classList.add('calculated');
+        setTimeout(() => {
+            element.classList.add('calculated-highlight');
+            setTimeout(() => {
+                element.classList.remove('calculated-highlight');
+            }, 250);
+        }, 0); // レイアウトの更新を待たずに次のクラスの追加を実行する
+    } else {
+        element.classList.remove('calculated', 'calculated-highlight');
+    }
 }

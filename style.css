@@ -78,6 +78,14 @@ body {
     margin-bottom: 10px;
 }
 
+.calculated {
+    background-color: #caf4ff;
+}
+
+.calculated-highlight {
+    background-color: #a5ebff;
+}
+
 .on-click {
     background-color: #bbb;
 }
